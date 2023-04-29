@@ -1,38 +1,39 @@
-import {Notifications} from 'expo-notifications';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 import React, {useState, useEffect} from 'react';
 import {View, TextInput, Text} from 'react-native';
+import { Button } from 'react-native';
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+  return {
+  shouldShowAlert: true
+  }}
+  });
 
-const [milesPerWeek, setMilesPerWeek] = useState(0);
-<TextInput
-  placeholder="Enter miles per week"
-  keyboardType="numeric"
-  value={milesPerWeek.toString()}
-  onChangeText={(value) => setMilesPerWeek(parseInt(value))}
-/>
-const [timeSinceLastMaintenance, setTimeSinceLastMaintenance] = useState(0);
-<TextInput
-  placeholder="Enter Time Since Last Maintenance"
-  keyboardType="numeric"
-  value={timeSinceLastMaintenance.toString()}
-  onChangeText={(value) => setTimeSinceLastMaintenance(parseInt(value))}
-/>
-
-const maintenanceInterval = 3000; // example value in miles
-
-const lastMaintenanceDate = new Date(); // example value
-const timeSinceLastMaintenanceInMs = timeSinceLastMaintenance * 24 * 60 * 60 * 1000;
-const milesSinceLastMaintenance = milesPerWeek * timeSinceLastMaintenance / 7;
-const milesToNextMaintenance = maintenanceInterval - milesSinceLastMaintenance;
-
-const daysToNextMaintenance = Math.floor(milesToNextMaintenance / milesPerWeek * 7);
-const nextMaintenanceDate = new Date(lastMaintenanceDate.getTime() + daysToNextMaintenance * 24 * 60 * 60 * 1000);
-const notificationDate = new Date(nextMaintenanceDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-Notifications.scheduleNotificationAsync({
+<Button onPress={triggerNotifications} title="Trigger Local Notifications" color="#841584" 
+accessibilityLabel="Trigger Local Notifications"/>
+const triggerNotifications = async () => {
+  await Notifications.scheduleNotificationAsync({
   content: {
-    title: 'Maintenance Reminder',
-    body: `Your car is due for maintenance in one week (${nextMaintenanceDate.toLocaleDateString()}).`,
+  title: "You’ve got mail!" ,
+  body: 'Here is the notification body',
+  data: { data: 'goes here' },
   },
-  trigger: {
-    date: notificationDate,
-  },
-});
+  trigger: { seconds: 2 },
+  });
+  }
+
+
+  export default function App() {
+    useEffect(() => {
+    Permissions.getAsync(Permissions.NOTIFICATIONS).then((statusObj) => {
+    if (statusObj.status !== 'granted') {
+    return Permissions.askAsync(Permissions.NOTIFICATIONS)
+    }
+    return statusObj;
+    }).then((statusObj) => {
+    if (statusObj.status !== 'granted') {
+    return;
+    }
+    })
+    }, [])}
