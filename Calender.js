@@ -19,11 +19,11 @@ export default function Calendar() {
   const responseListener = useRef();
   const [milesPerWeek, setMilesPerWeek] = useState(null);
   const [nextMaintenanceDate, setNextMaintenanceDate] = useState(null);
+  const [nextMaintenanceMileage, setMilesToNext] = useState(null);
 
   const calculateNextMaintenanceDate = () => {
     // Calculate the next expected maintenance date based on the user input
     const milesPerYear = milesPerWeek * 52;
-    const nextMaintenanceMileage = 5000; // Assuming 5,000 miles between inspections
     const weeksUntilNextMaintenance = Math.ceil(nextMaintenanceMileage / milesPerYear * 52);
     const nextMaintenanceDate = new Date();
     nextMaintenanceDate.setDate(nextMaintenanceDate.getDate() + weeksUntilNextMaintenance * 7);
@@ -84,7 +84,8 @@ export default function Calendar() {
         data: { data: "data goes here" }
       },
       trigger: {
-        seconds: 5
+        seconds:5,
+        //Date: nextMaintenanceDate
         
       }
       
@@ -94,7 +95,13 @@ export default function Calendar() {
   return (
     
     <View style={styles.container}>
-      
+      <TextInput
+        value={nextMaintenanceMileage}
+        onChangeText={setMilesToNext}
+        keyboardType="numeric"
+        placeholder="HOW MANY MILES UNTIL INSPECTION?"
+        style={{ borderWidth: 1, borderColor: 'black', padding: 10, marginBottom: 20 }}
+      />
       <TextInput
         value={milesPerWeek}
         onChangeText={setMilesPerWeek}
@@ -129,4 +136,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
 
