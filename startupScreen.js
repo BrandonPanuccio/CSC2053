@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+export default StartupScreen;
+
 const StartupScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -65,11 +67,6 @@ const styles = StyleSheet.create({
   calendarIcon: {
     marginTop: 0,
   },
-  logo: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: 'pink',
-  },
   menu: {
     position: 'absolute',
     top: 70,
@@ -91,5 +88,3 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
-
-export default StartupScreen;
