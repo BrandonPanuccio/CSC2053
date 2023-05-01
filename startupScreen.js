@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Calendar from './Calender';
 
 const StartupScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -28,7 +27,7 @@ const StartupScreen = ({ navigation }) => {
           </View>
           <View style={styles.calendarIcon}>
             <Pressable onPress={() => navigation.navigate('Calendar')}>
-              <Ionicons name="calendar-outline" size={50} color="#black" />
+              <Ionicons name="calendar-outline" size={50} color="black" />
             </Pressable>
           </View>
         </View>
