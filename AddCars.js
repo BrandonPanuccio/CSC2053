@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button, TextInput, StyleSheet, Text, View } from 'react-native';
 
-export default function AddCars({ navigation }) {
+export default function AddCar({ navigation }) {
   //store what's entered in the TextInput in these state variables
     const [car, setCar] = useState("");
-    const [definition, setDefinition] = useState("");
+    const [description, setDescription] = useState("");
 
     return (
        <View style={styles.container}>
@@ -23,15 +23,15 @@ export default function AddCars({ navigation }) {
             style={{height: 40,
             borderColor: 'gray',
             borderWidth: 1}}
-            placeholder="Enter Definition"
-            /* when input is entered update the state variable, definition */
+            placeholder="Enter Description"
+            /* when input is entered update the state variable, description */
             onChangeText={(newText)=>{
-              setDefinition(newText);
+              setDescription(newText);
             }}
         
           />
-          <Button title="Add Cars" onPress={()=>{
-            navigation.navigate("MyCars", {newCar: car, newDefinition: definition})
+          <Button title="Add Car" onPress={()=>{
+            navigation.navigate("Add Car", {newCar: car, newDescription: description})
           }}/>
        </View>
   );
