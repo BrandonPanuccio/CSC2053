@@ -85,7 +85,7 @@ export default function App() {
   const onClick = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Title",
+        title: "Car Cat",
         body: 'You have a maintenance coming up!',
         data: { data: "data goes here" }
       },
@@ -96,6 +96,9 @@ export default function App() {
   }
 
   return (
+    <ImageBackground source = {{
+      uri: 'https://bergen.edu/wp-content/uploads/Academic-Calendar-header.jpg',
+    }} style={styles.backgroundImage}>
     <View style={styles.container}>
       <TouchableOpacity onPress={onClick}>
         <Text style={{backgroundColor: 'red', padding: 10, color: 'white'}}>Click me to schedule a notification!</Text>
@@ -117,10 +120,14 @@ export default function App() {
 
       <StatusBar style="auto" />
     </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
