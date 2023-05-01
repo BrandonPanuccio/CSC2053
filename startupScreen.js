@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Calendar from './Calender';
 
 const StartupScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -28,14 +29,10 @@ const StartupScreen = ({ navigation }) => {
           </Pressable>
         </View>
       </View>
-      <Text style={styles.logo}>Car Cat</Text>
       {menuVisible && (
         <View style={styles.menu}>
           <Pressable onPress={() => navigateToScreen('My Cars')}>
             <Text style={styles.menuItem}>My Cars</Text>
-          </Pressable>
-          <Pressable onPress={() => navigateToScreen('Add Cars')}>
-            <Text style={styles.menuItem}>Add Cars</Text>
           </Pressable>
         </View>
       )}
