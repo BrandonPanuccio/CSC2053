@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export default StartupScreen;
-
 const StartupScreen = ({ navigation }) => {
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   header: {
@@ -75,7 +72,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     elevation: 5,
-    zIndex: 1,
   },
   menuItem: {
     fontSize: 16,
@@ -85,6 +81,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     elevation: 5,
-    zIndex: 1,
   },
 });
+
+export default StartupScreen;
