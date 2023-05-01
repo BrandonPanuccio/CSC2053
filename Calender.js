@@ -1,9 +1,27 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
-import { Notifications } from 'expo';
-import * as Permissions from 'expo-permissions';
+import { StatusBar } from 'expo-status-bar';
+import React, {useEffect, useState, useRef} from 'react';
+import { StyleSheet, Text, Button, TextInput, View, TouchableOpacity } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+import storage from "@react-native-async-storage/async-storage";
 
-export default function MaintenanceScreen() {
+//1. import the library
+//2. get permission
+//3. do push notifications on button click
+//4. schedule push notifications
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true
+  })
+});
+
+export default function App() {
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
   const [lastMaintenanceDate, setLastMaintenanceDate] = useState(null);
   const [milesPerWeek, setMilesPerWeek] = useState(null);
   const [nextMaintenanceDate, setNextMaintenanceDate] = useState(null);
@@ -11,50 +29,78 @@ export default function MaintenanceScreen() {
   const calculateNextMaintenanceDate = () => {
     // Calculate the next expected maintenance date based on the user input
     const milesPerYear = milesPerWeek * 52;
-    const nextMaintenanceMileage = parseInt(lastMaintenanceDate) + 5000; // Assuming 5,000 miles between inspections
+    const nextMaintenanceMileage = 5000; // Assuming 5,000 miles between inspections
     const weeksUntilNextMaintenance = Math.ceil(nextMaintenanceMileage / milesPerYear * 52);
     const nextMaintenanceDate = new Date();
     nextMaintenanceDate.setDate(nextMaintenanceDate.getDate() + weeksUntilNextMaintenance * 7);
     setNextMaintenanceDate(nextMaintenanceDate.toDateString());
 
-    // Schedule a daily push notification to remind the user of the next expected maintenance date
-    scheduleDailyNotification(nextMaintenanceDate);
+    
   };
 
-  const scheduleDailyNotification = async (notificationDate) => {
-    // Request permission to send push notifications (if not already granted)
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push notification permission');
-      return;
+  useEffect(() => {
+    const getPermission = async () => {
+      if (Constants.isDevice) {
+          const { status: existingStatus } = await Notifications.getPermissionsAsync();
+          let finalStatus = existingStatus;
+          if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+          }
+          if (finalStatus !== 'granted') {
+            alert('Enable push notifications to use the app!');
+            await storage.setItem('expopushtoken', "");
+            return;
+          }
+          const token = (await Notifications.getExpoPushTokenAsync()).data;
+          await storage.setItem('expopushtoken', token);
+      } else {
+        alert('Must use physical device for Push Notifications');
+      }
+
+        if (Platform.OS === 'android') {
+          Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+          });
+        }
     }
 
-    // Schedule the daily push notification
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Maintenance Reminder',
-        body: `Your next maintenance is due on ${notificationDate.toDateString()}`,
-        data: { data: 'goes here' },
-      },
-      trigger: { hour: 9, minute: 0, repeats: true }, // Send the notification every day at 9am
+    getPermission();
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
     });
-  };
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {});
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+  const onClick = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Title",
+        body: 'You have a maintenance coming up!',
+        data: { data: "data goes here" }
+      },
+      trigger: {
+        seconds: 3
+      }
+    });
+  }
 
   return (
-    <View>
-      <Text>Enter your last maintenance date (in miles):</Text>
-      <TextInput
-        value={lastMaintenanceDate}
-        onChangeText={setLastMaintenanceDate}
-        keyboardType="numeric"
-        placeholder="Last maintenance date"
-        style={{ borderWidth: 1, borderColor: 'black', padding: 10, marginBottom: 10 }}
-      />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onClick}>
+        <Text style={{backgroundColor: 'red', padding: 10, color: 'white'}}>Click me to schedule a notification!</Text>
+      </TouchableOpacity>
+     
       <Text>Enter your miles per week:</Text>
       <TextInput
         value={milesPerWeek}
@@ -67,6 +113,18 @@ export default function MaintenanceScreen() {
       {nextMaintenanceDate && (
         <Text style={{ marginTop: 10 }}>Next Maintenance Date: {nextMaintenanceDate}</Text>
       )}
+    
+
+      <StatusBar style="auto" />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
