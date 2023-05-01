@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ImageBackground } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Calendar from './Calender';
 
@@ -16,36 +16,42 @@ const StartupScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.userIcon}>
-          <Pressable onPress={toggleMenu}>
-            <Ionicons name="person-circle-outline" size={50} color="#000000" />
-          </Pressable>
+    <ImageBackground source = {{
+      uri: 'https://media.istockphoto.com/id/1365407803/photo/rear-of-car-driving-on-highway-in-the-forest-with-mountain-on-gloomy.jpg?b=1&s=170667a&w=0&k=20&c=ticnKGaDsmBnTu9_dXunGd1hRi1OOIcUdnAflJhKVHg=',
+    }} style={styles.backgroundImage}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.userIcon}>
+            <Pressable onPress={toggleMenu}>
+              <Ionicons name="person-circle-outline" size={50} color="black" />
+            </Pressable>
+          </View>
+          <View style={styles.calendarIcon}>
+            <Pressable onPress={() => navigation.navigate('Calendar')}>
+              <Ionicons name="calendar-outline" size={50} color="#black" />
+            </Pressable>
+          </View>
         </View>
-        <View style={styles.calendarIcon}>
-          <Pressable onPress={() => navigation.navigate('Calendar')}>
-            <Ionicons name="calendar-outline" size={50} color="#000000" />
-          </Pressable>
-        </View>
+        {menuVisible && (
+          <View style={styles.menu}>
+            <Pressable onPress={() => navigateToScreen('My Cars')}>
+              <Text style={styles.menuItem}>My Cars</Text>
+            </Pressable>
+          </View>
+        )}
       </View>
-      {menuVisible && (
-        <View style={styles.menu}>
-          <Pressable onPress={() => navigateToScreen('My Cars')}>
-            <Text style={styles.menuItem}>My Cars</Text>
-          </Pressable>
-        </View>
-      )}
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
   },
   header: {
     flexDirection: 'column',
@@ -69,7 +75,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 70,
     right: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'black',
     padding: 10,
     borderRadius: 10,
     elevation: 5,
