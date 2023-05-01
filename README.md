@@ -4,4 +4,5 @@ Final Project
   npm install @react-navigation/native
   npm install @react-navigation/stack
   npm install expo-notifications
+  npm install @react-native-async-storage/async-storage
 
