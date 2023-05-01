@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Button, TextInput, StyleSheet, Text, View } from 'react-native';
 
-export default function AddCar({ navigation }) {
+export default function AddCars({ navigation }) {
   //store what's entered in the TextInput in these state variables
     const [car, setCar] = useState("");
-    const [description, setDescription] = useState("");
+    const [model, setModel] = useState("");
+    const [year, setYear] = useState("");
 
     return (
        <View style={styles.container}>
@@ -13,7 +14,7 @@ export default function AddCar({ navigation }) {
             borderColor: 'gray',
             borderWidth: 1}}
             placeholder="Enter Car"
-            /* when input is entered update the state variable, car */
+            /* when input is entered update the state variable, word */
             onChangeText={(newText)=>{
               setCar(newText);
             }}
@@ -23,15 +24,28 @@ export default function AddCar({ navigation }) {
             style={{height: 40,
             borderColor: 'gray',
             borderWidth: 1}}
-            placeholder="Enter Description"
-            /* when input is entered update the state variable, description */
+            placeholder="Enter Model"
+            /* when input is entered update the state variable, definition */
             onChangeText={(newText)=>{
-              setDescription(newText);
+              setModel(newText);
             }}
         
           />
+
+            <TextInput
+            style={{height: 40,
+            borderColor: 'gray',
+            borderWidth: 1}}
+            placeholder="Enter Year"
+            /* when input is entered update the state variable, definition */
+            onChangeText={(newText)=>{
+              setYear(newText);
+            }}
+        
+          />
+
           <Button title="Add Car" onPress={()=>{
-            navigation.navigate("Add Car", {newCar: car, newDescription: description})
+            navigation.navigate("My Cars", {newCar: car, newModel: model, newYear: year})
           }}/>
        </View>
   );
@@ -58,3 +72,4 @@ const styles = StyleSheet.create({
       borderColor: "blue",
     },
 });
+  
