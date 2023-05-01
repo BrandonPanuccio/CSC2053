@@ -37,8 +37,8 @@ export default function AddCars ({ route, navigation }) {
                 <Text style={styles.itemDesc}>{item.definition}</Text>
                 </View>
             } />
-            <Button title="Add Car" onPress={()=> {
-              navigation.navigate("AddCar");
+            <Button title="Add Cars" onPress={()=> {
+              navigation.navigate("Add Cars");
             }} />
         </View>
     );
