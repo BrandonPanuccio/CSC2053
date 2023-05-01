@@ -1,14 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState, useRef} from 'react';
-import { StyleSheet, Text, Button, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Button, TextInput, View, ImageBackground, TouchableOpacity } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import storage from "@react-native-async-storage/async-storage";
-
-//1. import the library
-//2. get permission
-//3. do push notifications on button click
-//4. schedule push notifications
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -18,11 +13,10 @@ Notifications.setNotificationHandler({
   })
 });
 
-export default function App() {
+export default function Calendar() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-  const [lastMaintenanceDate, setLastMaintenanceDate] = useState(null);
   const [milesPerWeek, setMilesPerWeek] = useState(null);
   const [nextMaintenanceDate, setNextMaintenanceDate] = useState(null);
 
@@ -90,37 +84,37 @@ export default function App() {
         data: { data: "data goes here" }
       },
       trigger: {
-        seconds: 3
+        seconds: 5
+        
       }
+      
     });
   }
 
   return (
-    <ImageBackground source = {{
-      uri: 'https://bergen.edu/wp-content/uploads/Academic-Calendar-header.jpg',
-    }} style={styles.backgroundImage}>
+    
     <View style={styles.container}>
-      <TouchableOpacity onPress={onClick}>
-        <Text style={{backgroundColor: 'red', padding: 10, color: 'white'}}>Click me to schedule a notification!</Text>
-      </TouchableOpacity>
-     
-      <Text>Enter your miles per week:</Text>
+      
       <TextInput
         value={milesPerWeek}
         onChangeText={setMilesPerWeek}
         keyboardType="numeric"
-        placeholder="Miles per week"
+        placeholder="HOW MANY MILES DO YOU DRIVE PER WEEK?"
         style={{ borderWidth: 1, borderColor: 'black', padding: 10, marginBottom: 10 }}
       />
       <Button title="Calculate Next Maintenance Date" onPress={calculateNextMaintenanceDate} />
       {nextMaintenanceDate && (
-        <Text style={{ marginTop: 10 }}>Next Maintenance Date: {nextMaintenanceDate}</Text>
+        <Text style={{ marginTop: 20, marginBottom:20}}>Next Maintenance Date: {nextMaintenanceDate}</Text>
       )}
+
+<TouchableOpacity onPress={onClick}>
+        <Text style={{backgroundColor: 'black', padding: 20, marginBottom:100, color: 'white'}}>Click me to schedule a notification!</Text>
+      </TouchableOpacity>
     
 
       <StatusBar style="auto" />
     </View>
-    </ImageBackground>
+    
   );
 }
 
@@ -135,3 +129,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
